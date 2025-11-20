@@ -1,4 +1,4 @@
-import { Code2, Users, BookOpen, GitBranch, GitMerge, Terminal, Sparkles } from 'lucide-react'
+import { Code2, Users, BookOpen, GitBranch, GitMerge, Terminal } from 'lucide-react'
 
 const About = () => {
     const features = [
