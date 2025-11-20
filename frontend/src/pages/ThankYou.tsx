@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
 const ThankYou = () => {
-  const discordInvite = import.meta.env.VITE_DISCORD_INVITE || 'https://discord.gg/yourinvite'
+  const discordInvite = import.meta.env.VITE_DISCORD_INVITE || 'https://discord.gg/dt2yS4ET'
 
   return (
     <div className="min-h-screen w-full relative">

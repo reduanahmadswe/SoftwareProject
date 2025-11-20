@@ -1,45 +1,50 @@
 import nodemailer from 'nodemailer'
 
 interface EmailOptions {
-  to: string
-  subject: string
-  html: string
+    to: string
+    subject: string
+    html: string
 }
 
 class EmailService {
-  private transporter: nodemailer.Transporter
+    private transporter: nodemailer.Transporter
 
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    })
-  }
+    constructor() {
+        this.transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_HOST,
+            port: Number(process.env.EMAIL_PORT) || 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD,
+            },
+        })
 
-  async sendEmail(options: EmailOptions): Promise<boolean> {
-    try {
-      await this.transporter.sendMail({
-        from: `"Git & GitHub Workshop" <${process.env.SMTP_USER}>`,
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-      })
-      return true
-    } catch (error) {
-      console.error('Email sending error:', error)
-      return false
+        console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
+        console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
+        console.log('EMAIL_USER:', process.env.EMAIL_USER);
+        console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? 'set' : 'not set');
     }
-  }
 
-  async sendConfirmationEmail(name: string, email: string): Promise<boolean> {
-    const discordInvite = process.env.DISCORD_INVITE || 'https://discord.gg/dt2yS4ET'
-    
-    const html = `
+    async sendEmail(options: EmailOptions): Promise<boolean> {
+        try {
+            await this.transporter.sendMail({
+                from: `"Git & GitHub Workshop" <${process.env.EMAIL_USER}>`,
+                to: options.to,
+                subject: options.subject,
+                html: options.html,
+            })
+            return true
+        } catch (error) {
+            console.error('Email sending error:', error)
+            return false
+        }
+    }
+
+    async sendConfirmationEmail(name: string, email: string): Promise<boolean> {
+        const discordInvite = process.env.DISCORD_INVITE || 'https://discord.gg/dt2yS4ET'
+
+        const html = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -116,12 +121,12 @@ class EmailService {
       </html>
     `
 
-    return this.sendEmail({
-      to: email,
-      subject: 'Registration Confirmed — Join our Discord',
-      html,
-    })
-  }
+        return this.sendEmail({
+            to: email,
+            subject: 'Registration Confirmed — Join our Discord',
+            html,
+        })
+    }
 }
 
 export default new EmailService()

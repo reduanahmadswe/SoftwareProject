@@ -9,6 +9,8 @@ import adminRoutes from './routes/admin.route'
 // Load environment variables
 dotenv.config()
 
+console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
+
 const app: Application = express()
 const PORT = process.env.PORT || 4000
 
