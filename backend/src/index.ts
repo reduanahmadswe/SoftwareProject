@@ -1,0 +1,71 @@
+import express, { Application, Request, Response, NextFunction } from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import dotenv from 'dotenv'
+import mongoose from 'mongoose'
+import registerRoutes from './routes/register.route'
+import adminRoutes from './routes/admin.route'
+
+// Load environment variables
+dotenv.config()
+
+const app: Application = express()
+const PORT = process.env.PORT || 4000
+
+// Middleware
+app.use(helmet()) // Security headers
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true,
+}))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+// Routes
+app.use('/api/register', registerRoutes)
+app.use('/api/admin', adminRoutes)
+
+// Health check
+app.get('/health', (_req: Request, res: Response) => {
+    res.status(200).json({ status: 'OK', message: 'Server is running' })
+})
+
+// 404 Handler
+app.use((_req: Request, res: Response) => {
+    res.status(404).json({ success: false, message: 'Route not found' })
+})
+
+// Error Handler
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    console.error('Error:', err.message)
+    res.status(500).json({
+        success: false,
+        message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+    })
+})
+
+// Database Connection
+const connectDB = async () => {
+    try {
+        const mongoURI = process.env.DATABASE_URL || 'mongodb://localhost:27017/git-github-workshop'
+        await mongoose.connect(mongoURI)
+        console.log('✅ MongoDB connected successfully')
+    } catch (error) {
+        console.error('❌ MongoDB connection error:', error)
+        process.exit(1)
+    }
+}
+
+// Start Server
+const startServer = async () => {
+    await connectDB()
+
+    app.listen(PORT, () => {
+        console.log(`🚀 Server is running on http://localhost:${PORT}`)
+        console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`)
+    })
+}
+
+startServer()
+
+export default app
