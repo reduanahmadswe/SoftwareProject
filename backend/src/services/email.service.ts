@@ -37,7 +37,7 @@ class EmailService {
   }
 
   async sendConfirmationEmail(name: string, email: string): Promise<boolean> {
-    const discordInvite = process.env.DISCORD_INVITE || 'https://discord.gg/yourinvite'
+    const discordInvite = process.env.DISCORD_INVITE || 'https://discord.gg/dt2yS4ET'
     
     const html = `
       <!DOCTYPE html>
