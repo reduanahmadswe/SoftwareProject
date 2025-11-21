@@ -1,4 +1,4 @@
-import { Github, Code2, Users, BookOpen } from 'lucide-react'
+import { Code2, Users, BookOpen } from 'lucide-react'
 
 const Hero = () => {
   const scrollToForm = () => {
@@ -37,16 +37,10 @@ const Hero = () => {
         {/* Floating Git and GitHub logos (CSS animated) */}
         {/* Multiple floating Git and GitHub logos for dynamic effect */}
         <div className="absolute left-[10%] top-[20%] animate-float-slow">
-          <svg width="38" height="38" viewBox="0 0 24 24" fill="#f14e32" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="12" fill="#f14e32" />
-            <path d="M17.7 10.3l-4-4a1 1 0 0 0-1.4 0l-4 4a1 1 0 0 0 1.4 1.4L11 9.42V16a1 1 0 0 0 2 0V9.42l1.3 1.3a1 1 0 1 0 1.4-1.42z" fill="#fff" />
-          </svg>
+          <img src="/git-vector-logos.png" alt="Logo" width="38" height="38" />
         </div>
         <div className="absolute left-[80%] top-[35%] animate-float-slower">
-          <svg width="38" height="38" viewBox="0 0 24 24" fill="#23272f" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="12" fill="#23272f" />
-            <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.48 2.87 8.28 6.84 9.63.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 7.07c.85.004 1.71.12 2.51.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2z" fill="#fff" />
-          </svg>
+          <img src="/git-vector-logos.png" alt="Logo" width="38" height="38" />
         </div>
         <div className="absolute left-[25%] top-[60%] animate-float-slowest">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="#f14e32" xmlns="http://www.w3.org/2000/svg">
@@ -105,7 +99,7 @@ const Hero = () => {
           {/* Features with Hover Effect */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-3xl mx-auto">
             <div className="flex flex-col items-center p-4 bg-white/10 rounded-lg backdrop-blur-sm transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
-              <Github className="w-8 h-8 mb-2" />
+              <img src="/git-vector-logos.png" alt="Logo" className="w-8 h-8 mb-2" />
               <span className="text-sm font-medium">Git Basics</span>
             </div>
             <div className="flex flex-col items-center p-4 bg-white/10 rounded-lg backdrop-blur-sm transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">

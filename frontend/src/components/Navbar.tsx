@@ -1,4 +1,4 @@
-import { Github, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
@@ -35,7 +35,7 @@ const Navbar = () => {
                         style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer' }}
                         aria-label="Go to Hero section"
                     >
-                        <Github className="w-8 h-8 text-blue-300" />
+                        <img src="/git-vector-logos.png" alt="Logo" className="w-8 h-8" />
                         <span className="text-xl font-bold text-white">
                             Git & GitHub Workshop
                         </span>
