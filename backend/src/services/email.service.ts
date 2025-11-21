@@ -1,50 +1,131 @@
 import nodemailer from 'nodemailer'
 
 interface EmailOptions {
-    to: string
-    subject: string
-    html: string
+  to: string
+  subject: string
+  html: string
 }
 
 class EmailService {
-    private transporter: nodemailer.Transporter
+  private transporter?: nodemailer.Transporter
+  private usingEthereal = false
 
-    constructor() {
-        this.transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST,
-            port: Number(process.env.EMAIL_PORT) || 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-        })
+  private async initTransporter() {
+    if (this.transporter) return
 
-        console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
-        console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
-        console.log('EMAIL_USER:', process.env.EMAIL_USER);
-        console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? 'set' : 'not set');
+    // If the environment provides SMTP settings, try to use them first
+    const host = process.env.EMAIL_HOST
+    const port = Number(process.env.EMAIL_PORT) || 587
+    const user = process.env.EMAIL_USER
+    const pass = process.env.EMAIL_PASSWORD
+
+    console.log('EMAIL_HOST:', host)
+    console.log('EMAIL_PORT:', process.env.EMAIL_PORT)
+    console.log('EMAIL_USER:', user)
+    console.log('EMAIL_PASSWORD:', pass ? 'set' : 'not set')
+
+    if (host && user && pass) {
+      this.transporter = nodemailer.createTransport({
+        host,
+        port,
+        secure: port === 465,
+        auth: { user, pass },
+      })
+
+      try {
+        await this.transporter.verify()
+        console.log('SMTP transporter verified (production).')
+        return
+      } catch (err) {
+        console.warn('Failed to verify provided SMTP transporter:', err)
+        // fallthrough to ethereal fallback
+      }
     }
 
-    async sendEmail(options: EmailOptions): Promise<boolean> {
+    // Fallback: create Ethereal test account for development when SMTP is not available
+    try {
+      const testAccount = await nodemailer.createTestAccount()
+      this.usingEthereal = true
+      this.transporter = nodemailer.createTransport({
+        host: testAccount.smtp.host,
+        port: testAccount.smtp.port,
+        secure: testAccount.smtp.secure,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass,
+        },
+      })
+      await this.transporter.verify()
+      console.log('Using Ethereal test account for emails. Messages will not reach real inboxes.')
+      console.log('Ethereal user:', testAccount.user)
+    } catch (err) {
+      console.error('Failed to create Ethereal test account:', err)
+      // leave transporter undefined; sendEmail will handle missing transporter
+    }
+  }
+
+  async sendEmail(options: EmailOptions): Promise<boolean> {
+    try {
+      await this.initTransporter()
+
+      if (!this.transporter) {
+        console.error('No email transporter available. Configure SMTP or allow Ethereal fallback.')
+        return false
+      }
+
+      const transporter = this.transporter as nodemailer.Transporter
+      const info = await transporter.sendMail({
+        from: `"Git & GitHub Workshop" <${process.env.EMAIL_USER || 'no-reply@example.com'}>`,
+        to: options.to,
+        subject: options.subject,
+        html: options.html,
+      })
+
+      if (this.usingEthereal) {
+        const preview = nodemailer.getTestMessageUrl(info)
+        console.log('Ethereal preview URL:', preview)
+      }
+
+      return true
+    } catch (error) {
+      const err = error as { code?: string; message?: string }
+      console.error('Email sending error:', err)
+
+      // If connection refused to provided SMTP, attempt Ethereal fallback once
+      if (err && (err.code === 'ECONNREFUSED' || err.code === 'ESOCKET')) {
+        console.warn('SMTP connection refused. Attempting Ethereal fallback...')
+        // reset transporter and try Ethereal
+        this.transporter = undefined
+        this.usingEthereal = false
+
         try {
-            await this.transporter.sendMail({
-                from: `"Git & GitHub Workshop" <${process.env.EMAIL_USER}>`,
-                to: options.to,
-                subject: options.subject,
-                html: options.html,
-            })
-            return true
-        } catch (error) {
-            console.error('Email sending error:', error)
-            return false
+          await this.initTransporter()
+          if (!this.transporter) return false
+
+          const transporter = this.transporter as nodemailer.Transporter
+          const info = await transporter.sendMail({
+            from: `"Git & GitHub Workshop" <${process.env.EMAIL_USER || 'no-reply@example.com'}>`,
+            to: options.to,
+            subject: options.subject,
+            html: options.html,
+          })
+          if (this.usingEthereal) console.log('Ethereal preview URL:', nodemailer.getTestMessageUrl(info))
+          return true
+        } catch (err2) {
+          const err2obj = err2 as { message?: string }
+          console.error('Fallback email sending failed:', err2obj)
+          return false
         }
+      }
+
+      return false
     }
+  }
 
-    async sendConfirmationEmail(name: string, email: string): Promise<boolean> {
-        const discordInvite = process.env.DISCORD_INVITE || 'https://discord.gg/dt2yS4ET'
+  async sendConfirmationEmail(name: string, email: string): Promise<boolean> {
+    const discordInvite = process.env.DISCORD_INVITE || 'https://discord.gg/dt2yS4ET'
 
-        const html = `
+    const html = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -121,12 +202,12 @@ class EmailService {
       </html>
     `
 
-        return this.sendEmail({
-            to: email,
-            subject: 'Registration Confirmed — Join our Discord',
-            html,
-        })
-    }
+    return this.sendEmail({
+      to: email,
+      subject: 'Registration Confirmed — Join our Discord',
+      html,
+    })
+  }
 }
 
 export default new EmailService()

@@ -33,19 +33,23 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
         await registration.save()
 
-        // Send confirmation email (non-blocking)
+        // Send confirmation email (non-blocking) only if a valid email was provided
         // In a production app, you might want to use a job queue for this
-        emailService
-            .sendConfirmationEmail(registration.name, validatedData.whatsapp) // Using whatsapp as email placeholder
-            .then((emailSent) => {
-                if (emailSent) {
-                    registration.emailSent = true
-                    registration.save()
-                }
-            })
-            .catch((error) => {
-                console.error('Failed to send email:', error)
-            })
+        if (registration.email) {
+            emailService
+                .sendConfirmationEmail(registration.name, registration.email)
+                .then((emailSent) => {
+                    if (emailSent) {
+                        registration.emailSent = true
+                        registration.save()
+                    }
+                })
+                .catch((error) => {
+                    console.error('Failed to send email:', error)
+                })
+        } else {
+            console.warn('No email provided for registration; skipping confirmation email.')
+        }
 
         res.status(201).json({
             success: true,
