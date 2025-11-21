@@ -1,1 +1,2 @@
+# Handle React Router routes - redirect all non-API routes to index.html
 /*    /index.html   200

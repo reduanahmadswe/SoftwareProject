@@ -1,0 +1,11 @@
+# Build command
+npm run build
+
+# Publish directory  
+dist
+
+# Environment
+Node.js
+
+# Static site settings for SPA
+/*    /index.html   200
