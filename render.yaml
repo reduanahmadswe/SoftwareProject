@@ -2,40 +2,27 @@
 # This file should be at the root of your repository
 
 services:
-  # Frontend static site
-  - name: githubworkshop-frontend
-    type: web
-    runtime: static
-    repo: https://github.com/reduanahmadswe/SoftwareProject
-    branch: main
-    rootDir: ./frontend
+  - type: web
+    name: githubworkshop-frontend
+    env: static
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
-    pullRequestPreviewsEnabled: false
-
-    # Environment variables for frontend
+    pullRequestPreviewsEnabled: true
+    # SPA routing - serve index.html for all routes
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: VITE_API_URL
         value: https://your-backend-url.onrender.com
-
-    # Custom headers and routing for SPA
     headers:
       - path: /*
         name: Cache-Control
         value: public, max-age=0, must-revalidate
-      - path: /static/*
+      - path: /assets/*
         name: Cache-Control
-        value: public, max-age=31536000, immutable
-
-    routes:
-      - type: rewrite
-        source: /admin/*
-        destination: /index.html
-      - type: rewrite
-        source: /*
-        destination: /index.html
-
-  # Backend service (if you want to deploy backend too)
+        value: public, max-age=31536000, immutable # Backend service (if you want to deploy backend too)
   - name: githubworkshop-backend
     type: web
     runtime: node
