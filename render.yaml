@@ -12,12 +12,6 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-  - name: githubworkshop-backend
-    type: web
-    runtime: node
-    repo: https://github.com/reduanahmadswe/SoftwareProject
-    branch: main
-    rootDir: ./backend
     buildCommand: npm install && npm run build
     startCommand: npm start
 
