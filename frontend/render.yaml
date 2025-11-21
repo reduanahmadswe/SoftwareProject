@@ -1,11 +1,18 @@
-# Build command
-npm run build
-
-# Publish directory  
-dist
-
-# Environment
-Node.js
-
-# Static site settings for SPA
-/*    /index.html   200
+services:
+  - name: githubworkshop-frontend
+    type: web
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

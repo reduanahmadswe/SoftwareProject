@@ -1,2 +1,7 @@
-# Handle React Router routes - redirect all non-API routes to index.html
+# Specific admin routes first
+/admin/login  /index.html  200
+/admin/dashboard  /index.html  200
+/admin/*  /index.html  200
+
+# Handle all other React Router routes - redirect to index.html
 /*    /index.html   200
