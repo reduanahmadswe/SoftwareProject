@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "name": "git-github-workshop-backend",
+  "builds": [
+    {
+      "src": "src/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/src/index.ts"
+    }
+  ],
+  "functions": {
+    "src/index.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}

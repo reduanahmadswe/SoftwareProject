@@ -1,5 +1,4 @@
 import express, { Application, Request, Response, NextFunction } from 'express'
-import path from 'path'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
@@ -21,7 +20,12 @@ app.set('trust proxy', 1)
 // Middleware
 app.use(helmet()) // Security headers
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: [
+        process.env.FRONTEND_URL || 'http://localhost:5173',
+        /\.vercel\.app$/,
+        /\.netlify\.app$/,
+        'https://localhost:5173'
+    ],
     credentials: true,
 }))
 app.use(express.json())
@@ -36,26 +40,14 @@ app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({ status: 'OK', message: 'Server is running' })
 })
 
-// 404 Handler
-// Serve frontend static files and enable SPA fallback for client-side routes
-// This ensures reloads like /thank-you return index.html instead of 404.
-const clientBuildPath = path.join(__dirname, '..', '..', 'frontend', 'dist')
-app.use(express.static(clientBuildPath))
-
-// If the request doesn't start with /api, serve index.html (SPA fallback)
-app.get('*', (req: Request, res: Response, next: NextFunction) => {
-    if (req.path.startsWith('/api')) return next()
-
-    const indexHtml = path.join(clientBuildPath, 'index.html')
-    res.sendFile(indexHtml, (err) => {
-        if (err) {
-            // If index.html not found, fall back to JSON 404
-            res.status(404).json({ success: false, message: 'Route not found' })
-        }
+// 404 Handler for API routes only (since frontend is hosted separately)
+app.get('*', (_req: Request, res: Response) => {
+    res.status(404).json({
+        success: false,
+        message: 'API route not found',
+        availableRoutes: ['/api/register', '/api/admin', '/health']
     })
-})
-
-// Error Handler
+})// Error Handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error('Error:', err.message)
     res.status(500).json({

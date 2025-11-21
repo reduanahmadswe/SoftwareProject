@@ -272,13 +272,53 @@ VITE_API_URL=http://localhost:4000
 
 ## Deployment
 
-### Frontend
+### Vercel Deployment (Recommended)
+
+This project is configured for easy deployment to Vercel with both frontend and backend:
+
+#### Quick Deploy
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Run deployment script
+npm run deploy:vercel
+```
+
+#### Manual Deploy
+
+```bash
+# Login to Vercel
+vercel login
+
+# Deploy
+vercel --prod
+```
+
+#### Required Environment Variables for Vercel:
+
+- `DATABASE_URL` - MongoDB connection string
+- `JWT_SECRET` - Secret key for JWT tokens
+- `EMAIL_HOST` - SMTP host (e.g., smtp.gmail.com)
+- `EMAIL_PORT` - SMTP port (e.g., 587)
+- `EMAIL_USER` - Your email address
+- `EMAIL_PASS` - Your email password/app password
+- `NODE_ENV` - Set to "production"
+
+📖 **Detailed Guide**: See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md)
+
+📋 **Checklist**: See [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
+
+### Alternative Deployments
+
+#### Frontend Only
 
 - Vercel / Netlify
 - Build command: `npm run build`
 - Output directory: `dist`
 
-### Backend
+#### Backend Only
 
 - Render / Heroku / DigitalOcean
 - Start command: `npm start`
