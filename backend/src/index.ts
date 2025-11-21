@@ -15,6 +15,9 @@ console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
 const app: Application = express()
 const PORT = process.env.PORT || 4000
 
+// Trust proxy - required for Render and other reverse proxies
+app.set('trust proxy', 1)
+
 // Middleware
 app.use(helmet()) // Security headers
 app.use(cors({
