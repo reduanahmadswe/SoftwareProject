@@ -60,7 +60,8 @@ const RegistrationSchema: Schema = new Schema({
 })
 
 // Index for faster queries
-RegistrationSchema.index({ universityId: 1 })
+// `unique: true` is already set on `universityId` above, so avoid declaring the same index twice.
+// Keep the createdAt index for sorting queries.
 RegistrationSchema.index({ createdAt: -1 })
 
 export default mongoose.model<IRegistration>('Registration', RegistrationSchema)
