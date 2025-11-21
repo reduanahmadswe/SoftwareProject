@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import Registration from '../models/Registration.model'
 import csvExporter from '../utils/csvExporter'
 import excelExporter from '../utils/excelExporter'
-import fs from 'fs'
 
 export const getAllRegistrations = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -38,23 +37,14 @@ export const getAllRegistrations = async (req: Request, res: Response): Promise<
 
 export const exportRegistrationsCSV = async (_req: Request, res: Response): Promise<void> => {
     try {
-        const filePath = await csvExporter.exportRegistrations()
+        const csvContent = await csvExporter.exportRegistrations()
 
-        // Send file
-        res.download(filePath, 'registrations.csv', (err: any) => {
-            if (err) {
-                console.error('Error sending file:', err)
-                res.status(500).json({
-                    success: false,
-                    message: 'Failed to download CSV',
-                })
-            }
+        // Set headers for CSV download
+        res.setHeader('Content-Type', 'text/csv')
+        res.setHeader('Content-Disposition', 'attachment; filename=registrations.csv')
 
-            // Delete file after sending
-            setTimeout(() => {
-                fs.unlinkSync(filePath)
-            }, 1000)
-        })
+        // Send CSV content directly
+        res.send(csvContent)
     } catch (error) {
         console.error('Error exporting CSV:', error)
         res.status(500).json({
@@ -66,23 +56,14 @@ export const exportRegistrationsCSV = async (_req: Request, res: Response): Prom
 
 export const exportRegistrationsExcel = async (_req: Request, res: Response): Promise<void> => {
     try {
-        const filePath = await excelExporter.exportRegistrations()
+        const buffer = await excelExporter.exportRegistrations()
 
-        // Send file
-        res.download(filePath, 'registrations.xlsx', (err) => {
-            if (err) {
-                console.error('Error sending file:', err)
-                res.status(500).json({
-                    success: false,
-                    message: 'Failed to download Excel',
-                })
-            }
+        // Set headers for Excel download
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        res.setHeader('Content-Disposition', 'attachment; filename=registrations.xlsx')
 
-            // Delete file after sending
-            setTimeout(() => {
-                fs.unlinkSync(filePath)
-            }, 1000)
-        })
+        // Send buffer directly
+        res.send(buffer)
     } catch (error) {
         console.error('Error exporting Excel:', error)
         res.status(500).json({

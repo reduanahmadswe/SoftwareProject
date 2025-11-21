@@ -1,10 +1,8 @@
 import ExcelJS from 'exceljs'
 import Registration from '../models/Registration.model'
-import path from 'path'
-import fs from 'fs'
 
 class ExcelExporter {
-    async exportRegistrations(): Promise<string> {
+    async exportRegistrations(): Promise<Buffer> {
         try {
             const registrations = await Registration.find().sort({ createdAt: -1 })
 
@@ -69,20 +67,10 @@ class ExcelExporter {
                 }
             })
 
-            // Create exports directory if it doesn't exist
-            const exportsDir = path.join(__dirname, '../../exports')
-            if (!fs.existsSync(exportsDir)) {
-                fs.mkdirSync(exportsDir, { recursive: true })
-            }
+            // Generate buffer instead of file
+            const buffer = await workbook.xlsx.writeBuffer()
 
-            // Generate unique filename
-            const filename = `registrations-${Date.now()}.xlsx`
-            const filePath = path.join(exportsDir, filename)
-
-            // Write to file
-            await workbook.xlsx.writeFile(filePath)
-
-            return filePath
+            return Buffer.from(buffer)
         } catch (error) {
             console.error('Error exporting to Excel:', error)
             throw error
