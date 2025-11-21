@@ -1,4 +1,5 @@
 import express, { Application, Request, Response, NextFunction } from 'express'
+import path from 'path'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
@@ -33,8 +34,22 @@ app.get('/health', (_req: Request, res: Response) => {
 })
 
 // 404 Handler
-app.use((_req: Request, res: Response) => {
-    res.status(404).json({ success: false, message: 'Route not found' })
+// Serve frontend static files and enable SPA fallback for client-side routes
+// This ensures reloads like /thank-you return index.html instead of 404.
+const clientBuildPath = path.join(__dirname, '..', '..', 'frontend', 'dist')
+app.use(express.static(clientBuildPath))
+
+// If the request doesn't start with /api, serve index.html (SPA fallback)
+app.get('*', (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api')) return next()
+
+    const indexHtml = path.join(clientBuildPath, 'index.html')
+    res.sendFile(indexHtml, (err) => {
+        if (err) {
+            // If index.html not found, fall back to JSON 404
+            res.status(404).json({ success: false, message: 'Route not found' })
+        }
+    })
 })
 
 // Error Handler
