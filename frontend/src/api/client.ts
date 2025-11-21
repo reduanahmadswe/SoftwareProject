@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || 'https://git-github-workshop-backend.vercel.app'
 
 export interface RegistrationData {
   name: string
@@ -19,8 +19,20 @@ const getAuthHeader = () => {
 
 export const api = {
   register: async (data: RegistrationData) => {
-    const response = await axios.post(`${API_URL}/api/register`, data)
-    return response.data
+    try {
+      const response = await axios.post(`${API_URL}/api/register`, data, {
+        timeout: 10000, // 10 second timeout
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      return response.data
+    } catch (error: any) {
+      if (error.code === 'ECONNABORTED') {
+        throw new Error('Request timeout. Please check your internet connection.')
+      }
+      throw error
+    }
   },
 
   adminLogin: async (email: string, password: string) => {

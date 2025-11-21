@@ -5,12 +5,14 @@
 ## 🎯 Deployment Strategy
 
 ### Frontend Options:
+
 - ✅ **Vercel** (সবচেয়ে সহজ)
-- ✅ **Netlify** 
+- ✅ **Netlify**
 - ✅ **GitHub Pages**
 - ✅ **Firebase Hosting**
 
 ### Backend Options:
+
 - ✅ **Vercel** (Serverless Functions)
 - ✅ **Render** (Free tier available)
 - ✅ **Heroku** (Paid)
@@ -22,11 +24,13 @@
 ### Option 1: Vercel (Recommended)
 
 #### 1. Frontend Setup
+
 ```bash
 cd frontend
 ```
 
 #### 2. Deploy to Vercel
+
 ```bash
 # Vercel CLI install করুন (if not already)
 npm install -g vercel
@@ -39,19 +43,24 @@ vercel --prod
 ```
 
 #### 3. Environment Variables
+
 Vercel Dashboard → Settings → Environment Variables:
+
 - `VITE_API_URL` = Your backend URL (e.g., `https://your-backend.vercel.app`)
 
 ### Option 2: Netlify
 
 #### 1. Build Setup
+
 ```bash
 cd frontend
 npm run build
 ```
 
 #### 2. Deploy Options
+
 **Via Netlify CLI:**
+
 ```bash
 npm install -g netlify-cli
 netlify login
@@ -59,22 +68,27 @@ netlify deploy --prod --dir=dist
 ```
 
 **Via Drag & Drop:**
+
 1. Go to [Netlify](https://app.netlify.com)
 2. Drag & drop the `dist` folder
 
 #### 3. Environment Variables
+
 Netlify Dashboard → Site Settings → Environment Variables:
+
 - `VITE_API_URL` = Your backend URL
 
 ### Option 3: GitHub Pages
 
 #### 1. Install gh-pages
+
 ```bash
 cd frontend
 npm install --save-dev gh-pages
 ```
 
 #### 2. Update package.json
+
 ```json
 {
   "scripts": {
@@ -86,6 +100,7 @@ npm install --save-dev gh-pages
 ```
 
 #### 3. Deploy
+
 ```bash
 npm run deploy
 ```
@@ -95,17 +110,21 @@ npm run deploy
 ### Option 1: Vercel Serverless
 
 #### 1. Backend Setup
+
 ```bash
 cd backend
 ```
 
 #### 2. Deploy
+
 ```bash
 vercel --prod
 ```
 
 #### 3. Environment Variables
+
 Vercel Dashboard → Settings → Environment Variables:
+
 - `DATABASE_URL` = MongoDB connection string
 - `JWT_SECRET` = Secure secret key
 - `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`
@@ -115,9 +134,11 @@ Vercel Dashboard → Settings → Environment Variables:
 ### Option 2: Render (Free Tier)
 
 #### 1. GitHub Repository
+
 Push your backend code to GitHub
 
 #### 2. Render Setup
+
 1. Go to [Render](https://render.com)
 2. Connect GitHub account
 3. Create new Web Service
@@ -128,18 +149,22 @@ Push your backend code to GitHub
    - **Start Command**: `npm start`
 
 #### 3. Environment Variables
+
 Add in Render Dashboard:
+
 - `DATABASE_URL`, `JWT_SECRET`, etc.
 
 ### Option 3: Railway
 
 #### 1. Railway CLI
+
 ```bash
 npm install -g @railway/cli
 railway login
 ```
 
 #### 2. Deploy
+
 ```bash
 cd backend
 railway deploy
@@ -148,6 +173,7 @@ railway deploy
 ## 🔗 Connecting Frontend & Backend
 
 ### 1. Backend URL সেট করুন
+
 Frontend deploy করার পর:
 
 ```bash
@@ -156,24 +182,30 @@ VITE_API_URL=https://your-backend-url.com
 ```
 
 ### 2. CORS Configuration
+
 Backend এ frontend URL যোগ করুন:
+
 ```javascript
 // backend/src/index.ts
-app.use(cors({
+app.use(
+  cors({
     origin: [
-        'https://your-frontend-url.com',
-        'http://localhost:5173' // for development
+      "https://your-frontend-url.com",
+      "http://localhost:5173", // for development
     ],
     credentials: true,
-}))
+  })
+);
 ```
 
 ### 3. Re-deploy
+
 উভয় services re-deploy করুন environment variables আপডেট করার পর।
 
 ## 📋 Deployment Checklist
 
 ### Frontend Deployment:
+
 - [ ] Build test করেছেন (`npm run build`)
 - [ ] Platform choose করেছেন (Vercel/Netlify/etc.)
 - [ ] Deploy করেছেন
@@ -181,6 +213,7 @@ app.use(cors({
 - [ ] Site কাজ করছে কিনা check করেছেন
 
 ### Backend Deployment:
+
 - [ ] Build test করেছেন (`npm run build`)
 - [ ] Database connection string প্রস্তুত
 - [ ] Platform choose করেছেন (Vercel/Render/etc.)
@@ -189,6 +222,7 @@ app.use(cors({
 - [ ] API endpoints test করেছেন
 
 ### Final Testing:
+
 - [ ] Frontend থেকে backend API call হচ্ছে
 - [ ] Registration form কাজ করছে
 - [ ] Admin login কাজ করছে
@@ -200,21 +234,27 @@ app.use(cors({
 ### Common Issues:
 
 #### CORS Error:
+
 ```
 Access to fetch at 'backend-url' from origin 'frontend-url' has been blocked by CORS policy
 ```
+
 **Solution**: Backend এ frontend URL যোগ করুন CORS configuration এ
 
 #### Environment Variables না পাওয়া:
+
 ```
 Cannot read property of undefined
 ```
+
 **Solution**: সব environment variables সঠিকভাবে সেট করেছেন কিনা check করুন
 
 #### API Not Found:
+
 ```
 404 - API route not found
 ```
+
 **Solution**: Backend deployment সফল হয়েছে কিনা এবং সঠিক URL ব্যবহার করছেন কিনা check করুন
 
 ## 💡 Pro Tips
@@ -231,7 +271,7 @@ Cannot read property of undefined
 # Frontend build
 cd frontend && npm run build
 
-# Backend build  
+# Backend build
 cd backend && npm run build
 
 # Vercel deploy

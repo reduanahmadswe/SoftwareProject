@@ -129,15 +129,21 @@ const RegistrationForm = () => {
                       {errors.batch && <p className="text-xs text-red-400 mt-1">{errors.batch.message}</p>}
                     </label>
                     <label className="flex flex-col gap-1">
-                      <span className="font-semibold text-[#bab9b9] text-base mb-1">Email Address (University mail)</span>
+                      <span className="font-semibold text-[#bab9b9] text-base mb-1">
+                        Email Address <span className="text-red-500">*</span>
+                        <span className="text-green-400 text-sm ml-2">📧 Required for confirmation</span>
+                      </span>
                       <input
                         id="email"
                         type="email"
                         {...register('email')}
                         className="input bg-[#181f32] text-white w-full p-4 rounded-lg border border-[#232b45] focus:border-[#2563eb] outline-none text-base md:text-lg"
-                        placeholder="232-35-016@diu.edu.bd"
+                        placeholder="your-email@diu.edu.bd"
                       />
                       {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
+                      <p className="text-xs text-blue-300 mt-1">
+                        ✨ We'll send workshop details and Discord invite to this email
+                      </p>
                     </label>
                     <label className="flex flex-col gap-1">
                       <span className="font-semibold text-[#bab9b9] text-base mb-1">Phone Number(whatsapp)</span>

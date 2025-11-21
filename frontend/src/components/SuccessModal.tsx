@@ -32,23 +32,37 @@ const SuccessModal = ({ isOpen, onClose, name }: SuccessModalProps) => {
                 <div className="text-center text-white">
                     <h2 className="text-3xl font-bold mb-4">Registration Confirmed! 🎉</h2>
 
-                    <p className="text-blue-100 text-lg mb-6">
+                    <p className="text-blue-100 text-lg mb-4">
                         Hi <strong>{name}</strong>, thank you for registering!
                     </p>
+
+                    <div className="bg-green-900/20 rounded-lg p-4 mb-6 border border-green-700/30">
+                        <div className="flex items-center space-x-2 text-green-300">
+                            <CheckCircle className="w-5 h-5" />
+                            <span className="font-semibold">📧 Confirmation Email Sent!</span>
+                        </div>
+                        <p className="text-green-200 text-sm mt-2">
+                            Please check your email (including spam folder) for workshop details and Discord invite link.
+                        </p>
+                    </div>
 
                     <div className="bg-blue-800/30 rounded-lg p-6 mb-6 text-left">
                         <h3 className="font-bold text-lg mb-3 text-blue-200">Next Steps:</h3>
                         <ol className="space-y-2 text-blue-100">
                             <li className="flex items-start">
                                 <span className="font-bold mr-2">1.</span>
-                                <span><strong>Join our Discord community</strong> - Connect with instructors and participants</span>
+                                <span><strong>Check your email</strong> - Look for our confirmation message with Discord link</span>
                             </li>
                             <li className="flex items-start">
                                 <span className="font-bold mr-2">2.</span>
-                                <span><strong>Set up your GitHub account</strong> - Make sure it's ready for the workshop</span>
+                                <span><strong>Join our Discord community</strong> - Connect with instructors and participants</span>
                             </li>
                             <li className="flex items-start">
                                 <span className="font-bold mr-2">3.</span>
+                                <span><strong>Set up your GitHub account</strong> - Make sure it's ready for the workshop</span>
+                            </li>
+                            <li className="flex items-start">
+                                <span className="font-bold mr-2">4.</span>
                                 <span><strong>Install Git</strong> - Download from <a href="https://git-scm.com/downloads" target="_blank" rel="noopener noreferrer" className="text-blue-300 underline hover:text-blue-200">git-scm.com</a></span>
                             </li>
                         </ol>
