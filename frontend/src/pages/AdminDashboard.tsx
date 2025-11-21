@@ -62,8 +62,22 @@ const AdminDashboard = () => {
         }
     }
 
-    const handleExport = async () => {
-        // TODO: Implement CSV export logic here
+    const handleExportCSV = async () => {
+        try {
+            await api.exportCSV()
+        } catch (error) {
+            console.error('Export CSV failed:', error)
+            alert('Failed to export CSV')
+        }
+    }
+
+    const handleExportExcel = async () => {
+        try {
+            await api.exportExcel()
+        } catch (error) {
+            console.error('Export Excel failed:', error)
+            alert('Failed to export Excel')
+        }
     }
 
     const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -128,15 +142,24 @@ const AdminDashboard = () => {
                                     Refresh
                                 </button>
                                 <button
-                                    onClick={handleExport}
-                                    // removed isExporting
+                                    onClick={handleExportCSV}
                                     className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50"
                                 >
                                     <Download className="w-4 h-4" />
                                     Export CSV
                                 </button>
                                 <button
-                                    // onClick={handleLogout} (removed, not defined)
+                                    onClick={handleExportExcel}
+                                    className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50"
+                                >
+                                    <Download className="w-4 h-4" />
+                                    Export Excel
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        localStorage.removeItem('adminToken')
+                                        navigate('/admin/login')
+                                    }}
                                     className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-200 rounded-lg transition-colors"
                                 >
                                     <LogOut className="w-4 h-4" />

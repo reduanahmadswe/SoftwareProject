@@ -2,6 +2,7 @@ import { Router } from 'express'
 import {
   getAllRegistrations,
   exportRegistrationsCSV,
+  exportRegistrationsExcel,
   deleteRegistration,
   getRegistrationStats,
 } from '../controllers/admin.controller'
@@ -16,8 +17,11 @@ router.post('/login', login)
 // GET /api/admin/registrations - Get all registrations (paginated)
 router.get('/registrations', authenticateAdmin, getAllRegistrations)
 
-// GET /api/admin/export?format=csv - Export registrations as CSV
+// GET /api/admin/export - Export registrations as CSV
 router.get('/export', authenticateAdmin, exportRegistrationsCSV)
+
+// GET /api/admin/export/excel - Export registrations as Excel
+router.get('/export/excel', authenticateAdmin, exportRegistrationsExcel)
 
 // GET /api/admin/stats - Get registration statistics
 router.get('/stats', authenticateAdmin, getRegistrationStats)

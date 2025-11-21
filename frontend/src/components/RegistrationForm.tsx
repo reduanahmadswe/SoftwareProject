@@ -25,10 +25,7 @@ const RegistrationForm = () => {
       setIsSubmitting(true)
       setError(null)
 
-      // Remove consent from data before sending to API
-      const { consent, ...registrationData } = data
-
-      await api.register(registrationData)
+      await api.register(data)
 
       // Show success modal instead of navigating
       setRegisteredName(data.name)
@@ -192,19 +189,7 @@ const RegistrationForm = () => {
                   </label>
                 </div>
 
-                {/* Consent Checkbox */}
-                <div className="w-full px-6 pt-2 pb-4">
-                  <label className="flex items-center gap-2">
-                    <input
-                      id="consent"
-                      type="checkbox"
-                      {...register('consent')}
-                      className="w-4 h-4 text-blue-500 border-blue-300 rounded focus:ring-blue-400"
-                    />
-                    <span className="text-base text-blue-100">I agree to receive email confirmations and updates about this workshop <span className="text-red-400">*</span></span>
-                    {errors.consent && <p className="text-xs text-red-400 mt-1">{errors.consent.message}</p>}
-                  </label>
-                </div>
+
 
                 {/* Error Message */}
                 {error && (

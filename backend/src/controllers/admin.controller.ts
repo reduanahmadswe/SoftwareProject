@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import Registration from '../models/Registration.model'
 import csvExporter from '../utils/csvExporter'
+import excelExporter from '../utils/excelExporter'
 import fs from 'fs'
 
 export const getAllRegistrations = async (req: Request, res: Response): Promise<void> => {
@@ -59,6 +60,34 @@ export const exportRegistrationsCSV = async (_req: Request, res: Response): Prom
         res.status(500).json({
             success: false,
             message: 'Failed to export CSV',
+        })
+    }
+}
+
+export const exportRegistrationsExcel = async (_req: Request, res: Response): Promise<void> => {
+    try {
+        const filePath = await excelExporter.exportRegistrations()
+
+        // Send file
+        res.download(filePath, 'registrations.xlsx', (err) => {
+            if (err) {
+                console.error('Error sending file:', err)
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to download Excel',
+                })
+            }
+
+            // Delete file after sending
+            setTimeout(() => {
+                fs.unlinkSync(filePath)
+            }, 1000)
+        })
+    } catch (error) {
+        console.error('Error exporting Excel:', error)
+        res.status(500).json({
+            success: false,
+            message: 'Failed to export Excel',
         })
     }
 }

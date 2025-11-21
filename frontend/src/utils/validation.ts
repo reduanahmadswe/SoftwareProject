@@ -5,7 +5,7 @@ export const registrationSchema = z.object({
   universityId: z.string().min(3, 'University ID is required').max(50, 'University ID is too long'),
   semester: z.string().min(1, 'Semester is required'),
   batch: z.string().min(1, 'Batch is required').max(50, 'Batch name is too long'),
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Invalid email address').optional().or(z.literal('')),
   whatsapp: z.string()
     .regex(/^[\d\s\+\-\(\)]+$/, 'Invalid phone number format')
     .min(10, 'Phone number must be at least 10 digits')
@@ -16,7 +16,6 @@ export const registrationSchema = z.object({
       (val) => val.includes('github.com') || !val.includes('/'),
       'Please provide a valid GitHub username or URL'
     ),
-  consent: z.boolean().refine((val) => val === true, 'You must agree to the terms'),
 })
 
 export type RegistrationFormData = z.infer<typeof registrationSchema>

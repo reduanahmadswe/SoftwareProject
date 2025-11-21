@@ -5,10 +5,11 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 export interface RegistrationData {
   name: string
   universityId: string
-  whatsapp: string
+  semester: string
   batch: string
+  email?: string
+  whatsapp: string
   github: string
-  email: string
 }
 
 const getAuthHeader = () => {
@@ -49,6 +50,23 @@ export const api = {
     const link = document.createElement('a')
     link.href = url
     link.setAttribute('download', `registrations-${new Date().toISOString().split('T')[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+  },
+
+  exportExcel: async () => {
+    const response = await axios.get(`${API_URL}/api/admin/export/excel`, {
+      headers: getAuthHeader(),
+      responseType: 'blob',
+    })
+
+    // Create a blob link to download
+    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `registrations-${new Date().toISOString().split('T')[0]}.xlsx`)
     document.body.appendChild(link)
     link.click()
     link.remove()

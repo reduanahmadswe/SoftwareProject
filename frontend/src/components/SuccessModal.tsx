@@ -63,10 +63,6 @@ const SuccessModal = ({ isOpen, onClose, name }: SuccessModalProps) => {
                         Join Discord Server
                     </a>
 
-                    <p className="text-sm text-blue-200">
-                        Check your email for more details and updates.
-                    </p>
-
                     <button
                         onClick={onClose}
                         className="mt-6 text-blue-300 hover:text-white underline transition-colors"
