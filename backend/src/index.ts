@@ -12,8 +12,8 @@ dotenv.config()
 const app: Application = express()
 const PORT = process.env.PORT || 4000
 
-// Trust proxy - required for Vercel and other proxies
-app.set('trust proxy', true)
+// Trust proxy - configured for Vercel specifically
+app.set('trust proxy', 1)
 
 // Middleware
 app.use(helmet()) // Security headers

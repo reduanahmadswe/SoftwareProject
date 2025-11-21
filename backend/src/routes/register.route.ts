@@ -14,6 +14,11 @@ const registerLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  // Skip rate limiting validation warnings for Vercel
+  validate: {
+    trustProxy: false,
+    xForwardedForHeader: false,
+  },
 })
 
 // POST /api/register - Register a new user
